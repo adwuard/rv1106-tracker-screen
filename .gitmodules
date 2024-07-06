@@ -8,3 +8,6 @@
 [submodule "project/app/tracker_screen/libserialport-cmake"]
 	path = project/app/tracker_screen/libserialport-cmake
 	url = https://github.com/adwuard/libserialport-cmake
+[submodule "project/app/tracker_screen/m8c"]
+	path = project/app/tracker_screen/m8c
+	url = git@github.com:adwuard/m8c.git
