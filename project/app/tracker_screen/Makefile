@@ -123,7 +123,8 @@ m8c-build:
 	@echo "PKG_CONFIG_PATH is $(CURRENT_DIR)/out/lib/pkgconfig"
 	mkdir -p $(PKG_BIN);
 	mkdir -p $(PKG_BUILD);
-
+	mkdir -p $(CURRENT_DIR)/out/etc/init.d/;
+	mkdir -p $(CURRENT_DIR)/out/share/m8c/;
 	pushd $(PKG_BUILD)/; \
 		export PKG_CONFIG_PATH=$(CURRENT_DIR)/out/lib/pkgconfig;\
 		rm -rf CMakeCache.txt; \
@@ -135,6 +136,8 @@ m8c-build:
 			make -j$(RK_APP_JOBS) || exit -1; \
 			make install; \
 			cp $(CURRENT_DIR)/$(PKG_BUILD)/m8c $(CURRENT_DIR)/out/bin/m8c; \
+			cp $(CURRENT_DIR)/script/* $(CURRENT_DIR)/out/etc/init.d/; \
+			cp $(CURRENT_DIR)/m8c-config/config.ini $(CURRENT_DIR)/out/share/m8c/config.ini; \
 	popd;
 	$(call MAROC_COPY_PKG_TO_APP_OUTPUT, $(RK_APP_OUTPUT), $(PKG_BIN))
 	@echo "=====> build m8c done"

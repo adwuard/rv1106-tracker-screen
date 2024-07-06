@@ -447,7 +447,7 @@ function build_check(){
 }
 
 function build_app() {
-	check_config RK_APP_TYPE || return 0
+	# check_config RK_APP_TYPE || return 0
 
 	build_meta --export --media_dir $RK_PROJECT_PATH_MEDIA # export meta header files
 	test -d ${SDK_APP_DIR} && make -C ${SDK_APP_DIR}
