@@ -1,1 +1,3 @@
 output/
+IMAGE/
+.BoardConfig.mk
