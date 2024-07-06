@@ -2,3 +2,9 @@
 	path = project/app/tracker_screen/SDL
 	url = https://github.com/libsdl-org/SDL.git
     branch = SDL2
+[submodule "project/app/tracker_screen/libserialport"]
+	path = project/app/tracker_screen/libserialport
+	url = git@github.com:swegener/libserialport.git
+[submodule "project/app/tracker_screen/libserialport-cmake"]
+	path = project/app/tracker_screen/libserialport-cmake
+	url = https://github.com/adwuard/libserialport-cmake
