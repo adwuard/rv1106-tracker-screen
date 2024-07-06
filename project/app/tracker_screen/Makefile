@@ -41,7 +41,7 @@ PKG_CONF_OPTS += -DCMAKE_NO_SYSTEM_FROM_IMPORTED=ON
 PKG_CONF_OPTS += -DCMAKE_SYSTEM_NAME=Linux
 
 
-SDL_PKG_CONF_OPTS = PKG_CONF_OPTS
+SDL_PKG_CONF_OPTS= $(PKG_CONF_OPTS)
 SDL_PKG_CONF_OPTS += -DSDL_VIDEO=OFF \
 				-DSDL_DIRECTFB=ON \
 				-DSDL_ALSA=ON \
@@ -71,18 +71,16 @@ endif
 
 ifeq ($(EDSLAB_TRACKER_SCREEN_ENABLED),y)
 PKG_TARGET := libsdl2-build libserialport-build m8c-build
-# PKG_TARGET :=  libserialport-build m8c-build
 
 all: $(PKG_TARGET)
 	@echo "build $(PKG_NAME) done"
 endif
 
-
-
 libsdl2-build:
 	@echo "RK_APP_CHIP is $(RK_APP_CHIP)"
 	@echo "RK_APP_TYPE is $(RK_APP_TYPE)"
-	
+	rm -rf $(PKG_BIN);
+	rm -rf $(PKG_BUILD);
 	mkdir -p $(PKG_BIN);
 	mkdir -p $(PKG_BUILD);
 	pushd $(PKG_BUILD)/; \
@@ -120,12 +118,26 @@ libserialport-build:
 	@echo "=====> build libserialport-build done"
 
 m8c-build:
+	@echo "RK_APP_CHIP is $(RK_APP_CHIP)"
+	@echo "RK_APP_TYPE is $(RK_APP_TYPE)"
+	@echo "PKG_CONFIG_PATH is $(CURRENT_DIR)/out/lib/pkgconfig"
+	mkdir -p $(PKG_BIN);
+	mkdir -p $(PKG_BUILD);
+
+	pushd $(PKG_BUILD)/; \
+		export PKG_CONFIG_PATH=$(CURRENT_DIR)/out/lib/pkgconfig;\
+		rm -rf CMakeCache.txt; \
+		cmake $(CURRENT_DIR)/m8c/ \
+			-DCMAKE_C_COMPILER=$(RK_APP_CROSS)-gcc \
+			-DCMAKE_CXX_COMPILER=$(RK_APP_CROSS)-g++ \
+			-DCMAKE_INSTALL_PREFIX="$(CURRENT_DIR)/$(PKG_BIN)" \
+			$(PKG_CONF_OPTS) ;\
+			make -j$(RK_APP_JOBS) || exit -1; \
+			make install; \
+			cp $(CURRENT_DIR)/$(PKG_BUILD)/m8c $(CURRENT_DIR)/out/bin/m8c; \
+	popd;
+	$(call MAROC_COPY_PKG_TO_APP_OUTPUT, $(RK_APP_OUTPUT), $(PKG_BIN))
 	@echo "=====> build m8c done"
-
-
-# @test ! -d $(RK_APP_COMPONENT)/third_libs || make -C $(RK_APP_COMPONENT)/third_libs
-
-
 
 clean:
 	@rm -rf $(PKG_BIN) $(PKG_BUILD)
